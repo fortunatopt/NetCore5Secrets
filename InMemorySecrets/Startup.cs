@@ -29,9 +29,10 @@ namespace InMemorySecrets
                 .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true);
 
             // build connection string object
+            // DB Connection string stored as plain text
             var connectionStrings = new Dictionary<string, string>
             {
-                [$"ConnectionStrings:DB1"] = "DB1".GetSecret(region)
+                [$"ConnectionStrings:DB-Pass"] = "DB-Pass".GetSecret(region)
             };
             // add in-memory collection
             builder.AddInMemoryCollection(connectionStrings);
@@ -39,23 +40,11 @@ namespace InMemorySecrets
             _config = builder.Build();
 
         }
-        public class DbSecret
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
-            public string Engine { get; set; }
-            public string Host { get; set; }
-            public int Port { get; set; }
-            public string DbName { get; set; }
-        }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // get db connection string by name
-            var db1 = _config.GetConnectionString("DB1");
-            // TODO: deserialize secret depending on structure
-            var connObject = JsonConvert.DeserializeObject<DbSecret>(db1);
-            var connString = $"Server={connObject.Host};Database={connObject.DbName};User Id={connObject.Username}; Password={connObject.Password};";
+            var connString = _config.GetConnectionString("DB-Pass");
 
             // add db context
             services.AddDbContext<DataContext>(options =>
