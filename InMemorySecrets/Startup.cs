@@ -18,6 +18,7 @@ namespace InMemorySecrets
         public Startup(IConfiguration config, IWebHostEnvironment env)
         {
             // get the region from the appsettings.json
+            string appSecretsKey = config.GetValue<string>("APPSecrets");
             string region = config.GetValue<string>("AWSRegion");
             // set environment
             _env = env;
@@ -29,13 +30,11 @@ namespace InMemorySecrets
                 .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true);
 
             // build connection string object
-            // DB Connection string stored as plain text
-            var connectionStrings = new Dictionary<string, string>
-            {
-                [$"ConnectionStrings:DB-Pass"] = "DB-Pass".GetSecret(region)
-            };
+            var appSecretsString = appSecretsKey.GetSecret(region);
+            var appSecrets = JsonConvert.DeserializeObject<Dictionary<string, string>>(appSecretsString);
+
             // add in-memory collection
-            builder.AddInMemoryCollection(connectionStrings);
+            builder.AddInMemoryCollection(appSecrets);
             // build config
             _config = builder.Build();
 
@@ -44,7 +43,7 @@ namespace InMemorySecrets
         public void ConfigureServices(IServiceCollection services)
         {
             // get db connection string by name
-            var connString = _config.GetConnectionString("DB-Pass");
+            var connString = _config.GetConnectionString("DB1");
 
             // add db context
             services.AddDbContext<DataContext>(options =>
