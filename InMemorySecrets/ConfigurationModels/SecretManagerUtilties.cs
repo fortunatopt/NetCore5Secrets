@@ -4,7 +4,7 @@ using Amazon.SecretsManager.Model;
 using System;
 using System.IO;
 
-namespace InMemorySecrets.AWSModels
+namespace InMemorySecrets.ConfigurationModels
 {
     public static class SecretManagerUtilties
     {
