@@ -1,4 +1,4 @@
-using InMemorySecrets.AWSModels;
+using InMemorySecrets.ConfigurationModels;
 using InMemorySecrets.DatabaseContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace InMemorySecrets
 {
@@ -18,7 +16,7 @@ namespace InMemorySecrets
         public Startup(IConfiguration config, IWebHostEnvironment env)
         {
             _env = env;
-            _config = config;
+            _config = _env.GetConfiguration(config.GetValue<string>("SecretKey"), config.GetValue<string>("Region"));
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

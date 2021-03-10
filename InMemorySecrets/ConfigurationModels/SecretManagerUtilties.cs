@@ -4,7 +4,7 @@ using Amazon.SecretsManager.Model;
 using System;
 using System.IO;
 
-namespace InMemorySecrets.AWSModels
+namespace InMemorySecrets.ConfigurationModels
 {
     public static class SecretManagerUtilties
     {
@@ -13,7 +13,7 @@ namespace InMemorySecrets.AWSModels
             string secret = "";
 
             MemoryStream memoryStream = new MemoryStream();
-            IAmazonSecretsManager client = new AmazonSecretsManagerClient("AKIAUVDUFMGSTHJJO35N", "wOUi8wYMW6251m8T0fCROCBfBOr67kr7l20nRWhJ", RegionEndpoint.GetBySystemName(region));
+            IAmazonSecretsManager client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
 
             GetSecretValueRequest request = new GetSecretValueRequest();
             request.SecretId = secretName;
