@@ -17,27 +17,8 @@ namespace InMemorySecrets
         public IWebHostEnvironment _env { get; }
         public Startup(IConfiguration config, IWebHostEnvironment env)
         {
-            // get the region from the appsettings.json
-            string appSecretsKey = config.GetValue<string>("APPSecrets");
-            string region = config.GetValue<string>("AWSRegion");
-            // set environment
             _env = env;
-            // build the config, with secrets in memory
-            var builder = new ConfigurationBuilder();
-            builder.SetBasePath(_env.ContentRootPath);
-            // get non-secret config items with environment specific file if it exists
-            builder.AddJsonFile("appsettings.json", optional: true)
-                .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true);
-
-            // build connection string object
-            var appSecretsString = appSecretsKey.GetSecret(region);
-            var appSecrets = JsonConvert.DeserializeObject<Dictionary<string, string>>(appSecretsString);
-
-            // add in-memory collection
-            builder.AddInMemoryCollection(appSecrets);
-            // build config
-            _config = builder.Build();
-
+            _config = config;
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
