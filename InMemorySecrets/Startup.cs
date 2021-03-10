@@ -16,7 +16,7 @@ namespace InMemorySecrets
         public Startup(IConfiguration config, IWebHostEnvironment env)
         {
             _env = env;
-            _config = _env.GetConfiguration(config.GetValue<string>("SecretKey"), config.GetValue<string>("Region"));
+            _config = _env.UseConfigurationManager(config.GetValue<string>("SecretKey"), config.GetValue<string>("Region"));
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

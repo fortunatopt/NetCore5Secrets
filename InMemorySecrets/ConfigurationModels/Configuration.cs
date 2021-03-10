@@ -7,7 +7,7 @@ namespace InMemorySecrets.ConfigurationModels
 {
     public static class ConfigurationManager
     {
-        public static IConfiguration GetConfiguration(this IWebHostEnvironment env, string secret = "", string region = "")
+        public static IConfiguration UseConfigurationManager(this IWebHostEnvironment env, string secret = "", string region = "")
         {
             // build the config, with secrets in memory
             var builder = new ConfigurationBuilder();
@@ -32,13 +32,6 @@ namespace InMemorySecrets.ConfigurationModels
                 builder.AddJsonFile("appsettings.local.json", optional: true);
             }
             return builder.Build();
-        }
-    }
-    public static class ConfigurationManagerExtensions
-    {
-        public static IConfiguration UseConfigurationManager(this IWebHostEnvironment env, string secret = "", string region = "")
-        {
-            return env.GetConfiguration(secret, region);
         }
     }
 }
